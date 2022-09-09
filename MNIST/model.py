@@ -20,11 +20,39 @@ class Model(nn.Module) :
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
 
+        self.conv_layer2 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels= 32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
 
+        self.conv_layer3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels= 16, kernel_size=3, padding=1),
+            nn.BatchNorm2d(16),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+
+        self.fc1 = nn.Sequential(
+            nn.Linear(in_features=16*3*3, out_features=128, bias=True),
+            nn.ReLu()
+        )
+
+        self.fc2 = nn.Sequential(
+            nn.Linear(in_features=128, out_features=10, bias = True),
+            nn.ReLu()
+        )
 
         raise f"{__name__} 함수는 꼭 작성 되어야 합니다"
 
     @abstractmethod
     def forward(self, x) :
         output = self.conv_layer1(x)
+        output = self.conv_layer2(output)
+        output = output.view(output.shape[0], -1)
+        output = self.fc1(output)
+        output = self.fc2(output)
+
+        return output
 
