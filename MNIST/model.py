@@ -8,7 +8,7 @@ from abc import abstractmethod
 ## 나중에 유지 보수할 때 구현 안 해놨다가 발생하는 사고들을 막기 위함
 
 
-class Model(nn.Module) :
+class CustomModel(nn.Module) :
 
     @abstractmethod
     def __init__(self, x) :
@@ -39,6 +39,8 @@ class Model(nn.Module) :
             nn.ReLu()
         )
 
+        self.dropout = nn.Dropout(0.3)
+
         self.fc2 = nn.Sequential(
             nn.Linear(in_features=128, out_features=10, bias = True),
             nn.ReLu()
@@ -52,6 +54,7 @@ class Model(nn.Module) :
         output = self.conv_layer2(output)
         output = output.view(output.shape[0], -1)
         output = self.fc1(output)
+        output = self.dropout(output)
         output = self.fc2(output)
 
         return output
