@@ -1,0 +1,24 @@
+SEED : 42
+
+data_loader :
+  batch_size : 32
+  shuffle : True
+  val_ratio : 0.2
+
+trainer :
+  epochs : 100
+
+  save_dir : './SAVING MODEL/'
+  save_period : 10
+  monitor : 'min_val_loss'
+  early_stop : 5
+
+
+optimizer :
+  type : 'Adam'
+  lr : 0.01
+  
+loss_fn : 'cross_entropy_loss'
+
+
+
