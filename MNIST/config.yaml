@@ -9,6 +9,7 @@ trainer :
   epochs : 100
 
   save_dir : './SAVING MODEL/'
+  logging_step : 50
   save_period : 10
   monitor : 'min_val_loss'
   early_stop : 5
