@@ -3,6 +3,8 @@ from torchvision import datasets
 from torchvision import transforms
 from torchvision.transforms import ToTensor
 
+import load_config
+
 import torch
 
 from torch.utils.data import Dataset
@@ -14,9 +16,10 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
 class CustomDataset(Dataset) :
-    def __init__(self, img, labels) :
+    def __init__(self, img, labels, config) :
         self.img = img
         self.labels = labels
+        self.config = load_config.load_config('config.yaml')
         
 
     def __len__(self) :
@@ -28,7 +31,7 @@ class CustomDataset(Dataset) :
 
         return x, y
 
-def load_fashion_mnist (train=True) :
+def _load_fashion_mnist (train=True) :
     fasion_mnist = datasets.FashionMNIST(
     root="../data",
     train=train,
