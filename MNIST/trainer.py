@@ -3,11 +3,16 @@ import torch
 import numpy as np
 import dataset
 
+import load_config
+
+import dataloader
+import model
+
 class CustomTrainer() :
     def __init__(self, model, criterion, metric, optimizer, config, device,
                 data_loader, logging_step, val_data_loader=None) :
         self.config = config
-        self.device = device
+        self.device = self._get_device()
 
         self.model = model
         self.criterion = criterion
@@ -24,9 +29,14 @@ class CustomTrainer() :
 
         self.start_epoch = 1
 
-        self.check_point_dir = config.save_dir
+        self.check_point_dir = cfg_trainer['save_dir']
 
-        self.logging_step = logging_step
+        self.logging_step = cfg_trainer['logging_step']
+
+    def _get_device(self) :
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        print('학습 자원 : ', device)
+        return device
 
     def _save_checkpoint(self, epoch) :
         model_name = type(self.model).__name__
@@ -47,6 +57,8 @@ class CustomTrainer() :
     def train(self) :
         early_stop_to = 0
 
+        print('Start Training...')
+
         for epoch in range(self.start_epoch, self.epochs + 1) :
             self.model.train()
             
@@ -54,9 +66,12 @@ class CustomTrainer() :
                 data, label = data.to(self.device), label.to(self.device)
 
                 self.optimizer.zero_grad()
+
                 output = self.model(data)
+
                 loss = self.criterion(output, label)
                 loss.backward()
+                
                 self.optimizer.step()
 
                 if batch_idx % self.logging_step == 0 :
