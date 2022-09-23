@@ -61,20 +61,37 @@ class CustomTrainer() :
 
         for epoch in range(self.start_epoch, self.epochs + 1) :
             self.model.train()
+
+            train_loss, train_acc = 0, 0
             
             for batch_idx, (data, label) in enumerate(self.data_loader) :
                 data, label = data.to(self.device), label.to(self.device)
 
+                y_pred = model(data)
+
+                loss = self.criterion(y_pred, label)
+                train_loss += loss.item()
+
                 self.optimizer.zero_grad()
 
-                output = self.model(data)
-
-                loss = self.criterion(output, label)
                 loss.backward()
                 
                 self.optimizer.step()
 
-                if batch_idx % self.logging_step == 0 :
-                    print(f'EPOCH : {epoch} BATCH : {batch_idx}\n Train Loss : {loss.item():.2f}')
+                y_pred_prob = torch.argmax(torch.softmax(y_pred, dim=1), dim=1)
+                train_acc += (y_pred_prob == label).sum().item()/len(y_pred)
 
-## train 파트 마저 작성하기
+                ## loss와 정확도 계산
+                train_loss = train_loss / len(dataloader)
+                train_acc = train_acc / len(dataloader)
+
+                if batch_idx % self.logging_step == 0 :
+                    print(f'EPOCH : {epoch} BATCH : {batch_idx}\n Train Loss : {train_loss:.2f} | Train Acc : {train_acc:.2f}')
+
+    # def test(self) :
+        ''' # TODO
+        1. 일단 validate 생각하지 말고 train_test 만 일단 구현
+        2. 그 이후 validate 구현
+        3. 그 이후 early stopping 구현
+        4. 여기까지 되면 NLP데이터로도 해보기
+        '''
