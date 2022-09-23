@@ -35,6 +35,7 @@ class CustomModel(nn.Module) :
         )
 
         self.fc1 = nn.Sequential(
+            # nn.Flatten(), 이게 없어도 foward 에서 view로 구현
             nn.Linear(in_features=16*3*3, out_features=128, bias=True),
             nn.ReLu()
         )
