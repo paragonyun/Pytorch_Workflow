@@ -12,8 +12,6 @@ from torch.utils.data import Dataset
 
 import matplotlib.pyplot as plt
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
 
 class CustomDataset(Dataset) :
     def __init__(self, img, labels, config) :
