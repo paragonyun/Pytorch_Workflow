@@ -8,9 +8,9 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
 class CustomDataLoader(DataLoader) :
-    def __init__ (self, dataset, batch_size, shuffle, val_ratio) :
+    def __init__ (self, dataset, batch_size,  val_ratio, train=True, shuffle=True) :
         self.val_ratio = val_ratio
-        self.shuffle = shuffle
+
 
         self.train_sample, self.val_sample = self._spliter(self.val_ratio)
         
@@ -20,6 +20,9 @@ class CustomDataLoader(DataLoader) :
             'batch_size': batch_size,
             'shuffle': self.shuffle
         }
+
+        self.train = train
+
         super().__init__(sampler=self.train_sample, **self.init_kwargs)
 
     def _spliter(self, ratio) :
@@ -47,6 +50,18 @@ class CustomDataLoader(DataLoader) :
     def split_validation(self) :
         if self.val_sample is None :
             return None
-        else :
+        elif self.train :            
             ## sampler 파라미터에 val을 넣고 나머지 파라미터를 넣어줌
-            return DataLoader(sampler = self.val_sample, **self.init_kwargs)
+            train_loader = DataLoader(sampler= self.train_sample, **self.init_kwargs)
+            val_loader =  DataLoader(sampler = self.val_sample, **self.init_kwargs)
+            return train_loader, val_loader
+
+        else : ## test dataset인 경우
+            return DataLoader(**self.init_kwargs)
+        ''' 
+        나중에 train.py에서 
+        from dataloader import split_validation
+        dl = DataLoader(train_dataset, 32, 0.2)
+        train_loader , val_loader = dl.split_validation()
+        해줄 생각
+        '''
