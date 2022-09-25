@@ -30,7 +30,7 @@ class CustomDataset(Dataset) :
         return x, y
 
 def _load_fashion_mnist (train=True) :
-    fasion_mnist = datasets.FashionMNIST(
+    train_dataset = datasets.FashionMNIST(
     root="../data",
     train=train,
     download=True,
@@ -39,8 +39,16 @@ def _load_fashion_mnist (train=True) :
     ])
     )
     
-    data = fasion_mnist.data
-    target = fasion_mnist.targets
+    test_dataset = datasets.FashionMNIST(
+    root="../data",
+    train=False,
+    download=True,
+    transform=transforms.Compose([
+        ToTensor()
+    ])
+    )
 
-    return data, target
+    
+
+    return train_dataset, test_dataset
 
