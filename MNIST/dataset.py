@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 
 
 class CustomDataset(Dataset) :
-    def __init__(self, img, labels, config) :
+    def __init__(self, img=None, labels=None, config=None) :
         self.img = img
         self.labels = labels
-        self.config = load_config.load_config('config.yaml')
+        self.config = load_config.load_config('MNIST\config.yaml')
         
 
     def __len__(self) :
@@ -29,26 +29,28 @@ class CustomDataset(Dataset) :
 
         return x, y
 
-def _load_fashion_mnist (train=True) :
-    train_dataset = datasets.FashionMNIST(
-    root="../data",
-    train=train,
-    download=True,
-    transform=transforms.Compose([
-        ToTensor()
-    ])
-    )
-    
-    test_dataset = datasets.FashionMNIST(
-    root="../data",
-    train=False,
-    download=True,
-    transform=transforms.Compose([
-        ToTensor()
-    ])
-    )
+    def _load_fashion_mnist (self) :
+        
+        train_dataset = datasets.FashionMNIST(
+        root="../data",
+        train=True,
+        download=False,
+        transform=transforms.Compose([
+            ToTensor()
+        ])
+        )
+        
+        test_dataset = datasets.FashionMNIST(
+        root="../data",
+        train=False,
+        download=False,
+        transform=transforms.Compose([
+            ToTensor()
+        ])
+        )
 
     
 
-    return train_dataset, test_dataset
+
+        return train_dataset, test_dataset
 
