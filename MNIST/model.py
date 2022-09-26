@@ -10,8 +10,8 @@ from abc import abstractmethod
 
 class CustomModel(nn.Module) :
 
-    @abstractmethod
-    def __init__(self, x) :
+    def __init__(self) :
+        super(CustomModel, self).__init__()
         self.conv_layer1 = nn.Sequential(
             ## fashion mnist는 흑백 이미지이다 => in_channels=1
             nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, padding=1),
@@ -36,18 +36,18 @@ class CustomModel(nn.Module) :
 
         self.fc1 = nn.Sequential(
             # nn.Flatten(), 이게 없어도 foward 에서 view로 구현
-            nn.Linear(in_features=16*3*3, out_features=128, bias=True),
-            nn.ReLu()
+            nn.Linear(in_features=1568, out_features=128, bias=True),
+            nn.ReLU()
         )
 
         self.dropout = nn.Dropout(0.3)
 
         self.fc2 = nn.Sequential(
             nn.Linear(in_features=128, out_features=10, bias = True),
-            nn.ReLu()
+            nn.ReLU()
         )
 
-        raise f"{__name__} 함수는 꼭 작성 되어야 합니다"
+        # raise f"{__name__} 함수는 꼭 작성 되어야 합니다"
 
     @abstractmethod
     def forward(self, x) :
@@ -60,3 +60,4 @@ class CustomModel(nn.Module) :
 
         return output
 
+## Relu 해결하기
