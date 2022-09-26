@@ -11,14 +11,12 @@ import dataloader
 import model
 
 class CustomTrainer() :
-    def __init__(self, model, criterion, metric, optimizer, config, device,
-                logging_step, val_data_loader=None) :
+    def __init__(self, model, criterion, optimizer, config) :
         self.config = config
         self.device = self._get_device()
 
         self.model = model
         self.criterion = criterion
-        self.metric = metric
         self.optimizer = optimizer
 
         cfg_trainer = config['trainer']
@@ -59,6 +57,10 @@ class CustomTrainer() :
     def train(self, train_dataloader, val_dataloader) :
         early_stop_to = 0
 
+        
+
+        self.model.to(self.device)
+
         print('Start Training...')
 
         results = {
@@ -68,7 +70,7 @@ class CustomTrainer() :
             'val_acc' : []
         }
 
-        for epoch in range(self.start_epoch, self.epochs + 1) :
+        for epoch in tqdm(range(self.start_epoch, self.epochs + 1)) :
             self.model.train()
 
             train_loss, train_acc = 0, 0
@@ -76,7 +78,7 @@ class CustomTrainer() :
             for batch_idx, (data, label) in enumerate(train_dataloader) :
                 data, label = data.to(self.device), label.to(self.device)
 
-                y_pred = model(data)
+                y_pred = self.model(data)
 
                 loss = self.criterion(y_pred, label)
                 train_loss += loss.item()
@@ -96,19 +98,19 @@ class CustomTrainer() :
 
                 ## validate 
                 with torch.inference_mode() :
-                    model.eval()
+                    self.model.eval()
 
                     val_loss, val_acc = 0, 0
 
                     for batch_idx, (data, label) in enumerate(val_dataloader) :
                         data, label = data.to(self.device), label.to(self.device)
 
-                        val_pred = model(data)
+                        val_pred = self.model(data)
 
                         loss = self.criterion(y_pred, label)
                         val_loss += loss.item()
 
-                        val_pred_prob = val_pred.torch.argmax(dim=1)
+                        val_pred_prob = val_pred.argmax(dim=1)
                         val_acc += ((val_pred_prob == label).sum().item()/len(val_pred_prob))
                     
                 val_loss = val_loss / len(val_dataloader)
@@ -132,8 +134,8 @@ class CustomTrainer() :
 
     # def val(self) :
         ''' # TODO
-        1. 일단 validate 생각하지 말고 train_test 만 일단 구현
-        2. 그 이후 validate 구현
+        1. 일단 validate 생각하지 말고 train_test 만 일단 구현 ✅
+        2. 그 이후 validate 구현 ✅
         3. 그 이후 early stopping 구현
         4. 여기까지 되면 NLP데이터로도 해보기
         '''
