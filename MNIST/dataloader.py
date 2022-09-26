@@ -7,23 +7,21 @@ from torch.utils.data import DataLoader
 ## validation ratio를 나눌 때 random으로 sample 하게 도와줄 도구
 from torch.utils.data.sampler import SubsetRandomSampler
 
+import dataset
+
 class CustomDataLoader(DataLoader) :
-    def __init__ (self, dataset, batch_size,  val_ratio, train=True, shuffle=True) :
+    def __init__ (self, dataset, batch_size,  val_ratio, train=True) :
         self.val_ratio = val_ratio
+
+        self.dataset = dataset
+        self.batch_size = batch_size
+
+        self.train = train
 
 
         self.train_sample, self.val_sample = self._spliter(self.val_ratio)
         
-        ## 우당탕탕 넣어줄 params
-        self.init_kwargs = {
-            'dataset': dataset,
-            'batch_size': batch_size,
-            'shuffle': self.shuffle
-        }
 
-        self.train = train
-
-        super().__init__(sampler=self.train_sample, **self.init_kwargs)
 
     def _spliter(self, ratio) :
         if ratio == 0 :
@@ -52,8 +50,8 @@ class CustomDataLoader(DataLoader) :
             return None
         elif self.train :            
             ## sampler 파라미터에 val을 넣고 나머지 파라미터를 넣어줌
-            train_loader = DataLoader(sampler= self.train_sample, **self.init_kwargs)
-            val_loader =  DataLoader(sampler = self.val_sample, **self.init_kwargs)
+            train_loader = DataLoader(self.dataset ,sampler= self.train_sample, batch_size= self.batch_size)
+            val_loader =  DataLoader(self.dataset,sampler = self.val_sample, batch_size= self.batch_size)
             return train_loader, val_loader
 
         else : ## test dataset인 경우
