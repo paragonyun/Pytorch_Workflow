@@ -6,7 +6,7 @@ data_loader :
   val_ratio : 0.2
 
 trainer :
-  epochs : 100
+  epochs : 10
 
   save_dir : './SAVING MODEL/'
   logging_step : 50
