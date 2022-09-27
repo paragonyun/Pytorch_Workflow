@@ -88,6 +88,7 @@ class CustomTrainer() :
                 loss.backward()
                 
                 self.optimizer.step()
+                print(f"Batch : {batch_idx}'s Loss : {loss.item():.2f}")
 
                 y_pred_prob = torch.argmax(torch.softmax(y_pred, dim=1), dim=1)
                 train_acc += (y_pred_prob == label).sum().item()/len(y_pred)
