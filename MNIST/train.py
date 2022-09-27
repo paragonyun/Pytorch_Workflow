@@ -23,7 +23,7 @@ cls_model = model.CustomModel()
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(cls_model.parameters(),
                             lr = 0.01 ) ## parameter 조정하기
-config = load_config.load_config('MNIST\config.yaml')
+config = load_config.load_config('./config.yaml')
 
 TRAIN = trainer.CustomTrainer(model = cls_model, 
                         criterion=criterion,

@@ -17,7 +17,7 @@ class CustomDataset(Dataset) :
     def __init__(self, img=None, labels=None, config=None) :
         self.img = img
         self.labels = labels
-        self.config = load_config.load_config('MNIST\config.yaml')
+        self.config = load_config.load_config('./config.yaml')
         
 
     def __len__(self) :
@@ -34,7 +34,7 @@ class CustomDataset(Dataset) :
         train_dataset = datasets.FashionMNIST(
         root="../data",
         train=True,
-        download=False,
+        download=True,
         transform=transforms.Compose([
             ToTensor()
         ])
@@ -43,7 +43,7 @@ class CustomDataset(Dataset) :
         test_dataset = datasets.FashionMNIST(
         root="../data",
         train=False,
-        download=False,
+        download=True,
         transform=transforms.Compose([
             ToTensor()
         ])
