@@ -1,5 +1,6 @@
 from ast import Sub
 import numpy as np
+import torch
 
 ## 상속 받을 거 import
 from torch.utils.data import DataLoader
@@ -50,8 +51,8 @@ class CustomDataLoader(DataLoader) :
             return None
         elif self.train :            
             ## sampler 파라미터에 val을 넣고 나머지 파라미터를 넣어줌
-            train_loader = DataLoader(self.dataset ,sampler= self.train_sample, batch_size= self.batch_size)
-            val_loader =  DataLoader(self.dataset,sampler = self.val_sample, batch_size= self.batch_size)
+            train_loader = DataLoader(self.dataset ,sampler= self.train_sample, batch_size= self.batch_size, num_workers=torch.cuda.device_count() * 4, pin_memory=True)
+            val_loader =  DataLoader(self.dataset,sampler = self.val_sample, batch_size= self.batch_size, num_workers=torch.cuda.device_count() * 4, pin_memory=True)
             return train_loader, val_loader
 
         else : ## test dataset인 경우
