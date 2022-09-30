@@ -24,3 +24,7 @@ For practicing OOP and Modulization!! with Fashion MNIST
 - Define configs (like root directory or hyper parameters..!)
 
 It will be updated...!!
+
+# TODO LIST✅
+- [ ] Improving Train Speed
+- [ ] Model Save (utils.py)
