@@ -99,7 +99,7 @@ class Train :
             imgs, labels = imgs.to(self.device), labels.to(self.device)
 
             with torch.no_grad() :
-                outputs = model(imgs)
+                outputs = self.model(imgs)
 
             _, preds = torch.max(outputs.data, 1)
 
@@ -107,7 +107,7 @@ class Train :
 
             total += len(labels)
 
-        acc = running_corrects * 100 / total
+        acc = cor * 100 / total
         
         print(f'TEST SCORE : {acc:.2f}%')
 
