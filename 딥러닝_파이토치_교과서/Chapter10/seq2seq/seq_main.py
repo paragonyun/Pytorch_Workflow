@@ -1,6 +1,6 @@
 from seq2seq import Seq2Seq
 from making_dict import *
-from training import *
+from seq_training import *
 from Encoder import Encoder
 from Decoder import Decoder
 
@@ -36,3 +36,5 @@ print(encoder)
 print(decoder)
 
 model = trainModel(model, input_lang, output_lang, pairs, num_iteration)
+
+evaluateRandomly(model, input_lang, output_lang, pairs)
