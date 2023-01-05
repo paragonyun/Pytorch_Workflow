@@ -12,27 +12,23 @@ matplotlib.style.use("ggplot")
 
 from torchvision.utils import make_grid, save_image
 import torchvision.datasets as datasets
-import torchvision.transforms as transforms
+from torchvision import transforms as transforms
 
 BATCH_SIZE = 512
 
 
 def return_dataloader():
-    transforms = transforms.Compose(
+    augs = transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Normalize(
-                (0.5,)(
-                    0.5,
-                )
-            ),
+            transforms.Normalize((0.5,), (0.5,)),
         ]
     )
 
     train_dataset = datasets.MNIST(
         root="딥러닝_파이토치_교과서/Chapter13/data",
         train=True,
-        transform=transforms,
+        transform=augs,
         download=True,
     )
 
